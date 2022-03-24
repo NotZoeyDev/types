@@ -3,7 +3,7 @@ const path = require('path');
 
 const rootDir = path.join(__dirname, '../');
 
-const directories = ['other', 'components', 'core', 'modules', 'structures', 'utilities'];
+const directories = ['other', 'components', 'api', 'modules', 'structures', 'utilities'];
 
 let indexFile = '';
 for (const dir of directories) {
@@ -11,7 +11,7 @@ for (const dir of directories) {
   const recursiveSearch = (dir) => {
     const subdirs = fs.readdirSync(dir);
     const files = subdirs.map((subdir) => {
-      const res = path.resolve(dir, subdir);
+      const res = path.join(dir, subdir);
       return fs.statSync(res).isDirectory() ? recursiveSearch(res) : res;
     }).filter(Boolean);
 

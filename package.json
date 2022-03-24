@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "name": "unbound-types",
+  "author": "Swishilicous",
+  "description": "Typings for the Unbound Discord Client Mod.",
+  "types": "index.d.ts",
+  "dependencies": {
+    "@types/node": "^17.0.21",
+    "@types/react": "^17.0.40",
+    "@types/react-dom": "^17.0.13",
+    "discord-types": "^0.1.1"
+  }
+}

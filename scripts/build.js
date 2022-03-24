@@ -1,0 +1,26 @@
+const fs = require('fs');
+const path = require('path');
+
+const rootDir = path.join(__dirname, '../');
+
+const directories = ['other', 'components', 'core', 'modules', 'structures', 'utilities'];
+
+let indexFile = '';
+for (const dir of directories) {
+  const dirPath = path.join(rootDir, `./${dir}`);
+  const recursiveSearch = (dir) => {
+    const subdirs = fs.readdirSync(dir);
+    const files = subdirs.map((subdir) => {
+      const res = path.resolve(dir, subdir);
+      return fs.statSync(res).isDirectory() ? recursiveSearch(res) : res;
+    }).filter(Boolean);
+
+    files.forEach(file => {
+      indexFile += `${fs.readFileSync(file, 'utf-8')}\n\n`;
+    });
+  };
+
+  recursiveSearch(dirPath);
+}
+
+fs.writeFileSync(path.join(rootDir, 'index.d.ts'), indexFile);

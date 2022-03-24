@@ -1,4 +1,5 @@
 declare module '@utilities' {
+  export * as dom from '@utilities/dom';
   export { default as noop } from '@utilities/noop';
   export { default as uuid } from '@utilities/uuid';
   export { default as sleep } from '@utilities/sleep';

@@ -13,6 +13,14 @@ declare interface Manifest {
   }[],
 }
 
+declare module '@components/AsyncComponent' {
+  const AsyncComponent: {
+    from(promise: () => Promise<React.Component>, suspense: React.Component): React.NamedExoticComponent;
+  };
+
+  export default AsyncComponent;
+}
+
 declare module '@components/Category' {
   export default class Category extends React.Component<{
     title: string;
@@ -24,8 +32,76 @@ declare module '@components/Category' {
   }> { }
 }
 
-declare module '@components' {
+declare module '@components/ErrorBoundary' {
+  export default class ErrorBoundary extends React.Component { }
+}
 
+declare module '@components/ErrorState' {
+  export default class ErrorState extends React.Component<{
+    text?: string;
+  }> { }
+}
+
+declare module '@components/HorizontalDivider' {
+  export default class HorizontalDivider extends React.Component<{
+    height?: string;
+    width?: string;
+  }> { }
+}
+
+declare module '@components/Icon' {
+  export default class Icon extends React.Component<{
+    name: string;
+    [prop: string]: any;
+  }> {
+    static get Names(): React.Component[];
+  }
+}
+
+declare module '@components/SettingsItem' {
+  export default class SettingsItem extends React.Component<{
+    title: string;
+    note?: string;
+    required?: boolean;
+    hasMargin?: boolean;
+    children?: React.ReactNode;
+  }> { }
+}
+
+declare module '@components' {
+  export { default as Icon } from '@components/Icon';
+  export { default as Category } from '@components/Category';
+  export { default as ErrorState } from '@components/ErrorState';
+  export { default as SettingsItem } from '@components/SettingsItem';
+  export { default as ErrorBoundary } from '@components/ErrorBoundary';
+  export { default as AsyncComponent } from '@components/AsyncComponent';
+  export { default as HorizontalDivider } from '@components/HorizontalDivider';
+
+  export const Button: React.Component;
+  export const FormNotice: React.Component;
+  export const Card: React.Component;
+  export const Caret: React.Component;
+  export const Clickable: React.Component;
+  export const Spinner: React.Component;
+  export const FormTitle: React.Component;
+  export const FormItem: React.Component;
+  export const FormText: React.Component;
+  export const HeaderBar: React.Component;
+  export const TabBar: React.Component;
+  export const Text: React.Component;
+  export const Flex: React.Component;
+  export const Tooltip: React.Component;
+  export const RelativeTooltip: React.Component;
+  export const Menu: React.Component;
+  export const Divider: React.Component;
+  export const Switch: React.Component;
+  export const Markdown: React.Component;
+  export const SearchBar: React.Component;
+  export const ScrollerThin: React.Component;
+  export const Popout: React.Component;
+  export const Anchor: React.Component;
+  export const Notices: React.Component;
+  export const TextInput: React.Component;
 }
 
 declare module '@api/announcements' {

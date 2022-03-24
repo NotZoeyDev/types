@@ -21,3 +21,7 @@ declare module '@modules/webpack/common' {
 declare module '@modules/patcher' {
   export * from '@patcher';
 }
+
+declare module '@modules/utilities' {
+  export * from '@utilities';
+}

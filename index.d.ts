@@ -24,6 +24,10 @@ declare module '@components/Category' {
   }> { }
 }
 
+declare module '@components' {
+
+}
+
 declare module '@api/announcements' {
   /**
    * @param options.color require('@components').Notices.NoticeColors
@@ -102,8 +106,6 @@ declare module '@api' {
   export { default as announcements } from '@api/announcements';
 }
 
-
-
 declare module '@constants' {
   import Theme from '@structures/theme';
 
@@ -180,6 +182,10 @@ declare module '@modules/webpack/common' {
 
 declare module '@modules/patcher' {
   export * from '@patcher';
+}
+
+declare module '@modules/utilities' {
+  export * from '@utilities';
 }
 
 declare module '@modules/logger' {
@@ -510,6 +516,51 @@ declare module '@utilities/createStore' {
   };
 }
 
+declare module '@utilities/dom' {
+  /**
+   * @name appendStyle
+   * @description Appends a style to the unbound's head.
+   * @param {string} id - The unique identifier for this style.
+   * @param {string} instance - The CSS/URL string to apply to the DOM.
+   * @param {boolean} [url=false] - Whether to treat the css as a URL rather than a stylesheet.
+   * @return {object} Returns an object containing the removal function and the DOM element.
+   */
+  export function appendStyle(id: string, instance: string, url?: boolean): {
+    element: HTMLStyleElement;
+    remove: () => void;
+  };
+
+  /**
+   * @name appendScript
+   * @description Appends a script to the unbound's head.
+   * @param {string} id - The unique identifier for this script.
+   * @param {string} url - The URL of the script.
+   * @return {object} Returns an object containing the removal function and the DOM element.
+   */
+  export function appendScript(id: string, url: string): {
+    script: HTMLScriptElement;
+    remove: () => void;
+  } | undefined;
+
+  /**
+   * @name removeStyle
+   * @description Removes a style from the unbound's head.
+   * @param {string} id - The unique identifier for the style.
+   */
+  export function removeStyle(id: string): void;
+
+  /**
+   * @name removeScript
+   * @description Removes a script from the unbound's head.
+   * @param {string} id - The unique identifier for the script.
+   */
+  export function removeScript(id: string): void;
+
+  export const head: HTMLElement;
+
+  export * as default from '@utilities/dom';
+}
+
 declare module '@utilities/findInReactTree' {
   /**
    * @name findInReactTree
@@ -580,6 +631,7 @@ declare module '@utilities/getReactInstance' {
 }
 
 declare module '@utilities' {
+  export * as dom from '@utilities/dom';
   export { default as noop } from '@utilities/noop';
   export { default as uuid } from '@utilities/uuid';
   export { default as sleep } from '@utilities/sleep';

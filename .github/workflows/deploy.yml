@@ -23,14 +23,12 @@ jobs:
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "bot slave"
-          git pull
           git add -A
-          git commit --amend --no-edit
+          git commit -m "build types"
       - uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
-          force: true
 
       - name: Build Docs
         run: |

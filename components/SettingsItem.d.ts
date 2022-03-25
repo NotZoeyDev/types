@@ -1,4 +1,7 @@
 declare module '@components/SettingsItem' {
+  /**
+   * A simple settings switch.
+   */
   export default class SettingsItem extends React.Component<{
     title: string;
     note?: string;

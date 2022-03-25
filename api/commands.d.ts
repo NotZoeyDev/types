@@ -9,7 +9,14 @@ declare module '@api/commands' {
     icon: string,
   };
 
+  /**
+   * Unregisters a command by its ID.
+   */
   export function unregister(id: string): void;
+
+  /**
+   * Registers a command.
+   */
   export function register(options: {
     command: string;
     execute: (args: {

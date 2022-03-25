@@ -17,17 +17,33 @@ jobs:
           node-version: '16'
 
       - name: Build Types
-        run: |
-          cd ./scripts
-          node build
+        run: node build
 
       - name: Push to Github
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
+          git config --local user.name "bot slave"
           git add -A
           git commit -m "build types"
       - uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
+
+      - name: Build Docs
+        run: |
+          npm i -g typedoc
+          cd ./build
+          typedoc
+
+      - name: Push to Docs Repository
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source-directory: 'build/docs'
+          destination-github-username: 'unbound-mod'
+          destination-repository-name: 'docs'
+          user-email: 41898282+github-actions[bot]@users.noreply.github.com
+          commit-message: See ORIGIN_COMMIT from $GITHUB_REF
+          target-branch: main

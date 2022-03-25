@@ -96,6 +96,10 @@ declare module '@webpack' {
    * Converts all "stringable" modules to a string and searches for an indirect match much like getByProps.
    */
   export function getByString(...options: [...strings: string[], options: ExtendedOptions]): any;
+
+  /**
+   * Alias for getByString.
+   */
   export function findByString(...options: [...strings: string[], options: ExtendedOptions]): any;
   export function getByDefaultString(...options: [...strings: string[], options: ExtendedOptions]): any;
   export function findByDefaultString(...options: [...strings: string[], options: ExtendedOptions]): any;

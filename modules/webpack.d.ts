@@ -116,16 +116,27 @@ declare module '@webpack' {
    * A quicker way to fetch multiple modules at a time.
    * 
    * Takes an array of filter functions and outputs an array of modules in the same order.
-   * 
-   * Tip: you can destructure them!
+   * ```
+   * const [
+   *   Users,
+   *   StatusStore,
+   *   MemberListItem,
+   *   PrivateChannel,
+   * ] = bulk(
+   *   filters.byProps('getUser', 'getCurrentUser'),
+   *   filters.byProps('getStatusColor'),
+   *   filters.byDisplayName('MemberListItem')
+   *   filters.byDisplayName('PrivateChannel'),
+   * );
+   * ```
    */
   export function bulk(...options: [...filters: SearchFilter[], options: BulkOptions]): any;
 
   /**
-     * Only to be used as a developer tool for finding modules.
-     * 
-     * It takes a string and searches every object key on every module exports for an indirect match (String.indexOf > -1).
-     */
+   * Only to be used as a developer tool for finding modules.
+   * 
+   * It takes a string and searches every object key on every module exports for an indirect match (String.indexOf > -1).
+   */
   export function getByKeyword(keyword: string, options?: KeywordOptions): any;
 
   /**
@@ -142,6 +153,9 @@ declare module '@webpack' {
   export function getByDefaultString(...strings: string[]): any;
   export function findByDefaultString(...strings: string[]): any;
 
+  /**
+   * Quick filters for the "bulk" function.
+   */
   export const filters: {
     byProps(...props: string[]): SearchFilter;
     byDisplayName(name: string, dexport: boolean): SearchFilter;

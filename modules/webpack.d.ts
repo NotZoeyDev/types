@@ -93,7 +93,7 @@ declare module '@webpack' {
   export function findByDisplayName(displayName: string, options?: DisplayNameOptions): any;
 
   /**
-   * 
+   * Converts all "stringable" modules to a string and searches for an indirect match much like getByProps.
    */
   export function getByString(...options: [...strings: string[], options: ExtendedOptions]): any;
   export function findByString(...options: [...strings: string[], options: ExtendedOptions]): any;

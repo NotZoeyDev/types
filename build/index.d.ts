@@ -1,3 +1,6 @@
+/**
+ * The plugin/theme manifest.
+ */
 declare interface Manifest {
   id: string,
   name: string,

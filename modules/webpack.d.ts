@@ -101,7 +101,15 @@ declare module '@webpack' {
    * Alias for getByString.
    */
   export function findByString(...options: [...strings: string[], options: ExtendedOptions]): any;
+
+  /**
+   * Similar to getByString except it stringifys the default export.
+   */
   export function getByDefaultString(...options: [...strings: string[], options: ExtendedOptions]): any;
+
+  /**
+   * Alias for getByDefaultString.
+   */
   export function findByDefaultString(...options: [...strings: string[], options: ExtendedOptions]): any;
 
   /**

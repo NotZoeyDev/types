@@ -125,7 +125,7 @@ declare module '@webpack' {
    * ] = bulk(
    *   filters.byProps('getUser', 'getCurrentUser'),
    *   filters.byProps('getStatusColor'),
-   *   filters.byDisplayName('MemberListItem')
+   *   filters.byDisplayName('MemberListItem'),
    *   filters.byDisplayName('PrivateChannel'),
    * );
    * ```

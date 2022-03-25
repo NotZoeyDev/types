@@ -516,7 +516,15 @@ declare module '@webpack' {
    * Alias for getByString.
    */
   export function findByString(...options: [...strings: string[], options: ExtendedOptions]): any;
+
+  /**
+   * Similar to getByString except it stringifys the default export.
+   */
   export function getByDefaultString(...options: [...strings: string[], options: ExtendedOptions]): any;
+
+  /**
+   * Alias for getByDefaultString.
+   */
   export function findByDefaultString(...options: [...strings: string[], options: ExtendedOptions]): any;
 
   /**
@@ -700,18 +708,6 @@ declare module '@structures/theme' {
   }
 }
 
-declare module '@utilities/appendCSS' {
-  /**
-   * @name appendCSS
-   * @description Appends CSS to the DOM's head
-   * @param {string} id - The unique identifier for this CSS application
-   * @param {string} css - The CSS string to apply to the DOM
-   * @return {function} Returns the function that removes the instance of this DOM element
-   */
-
-  export default function (id: string, css: string): () => void;
-}
-
 declare module '@utilities/bindAll' {
   /**
    * @name bindAll
@@ -886,7 +882,6 @@ declare module '@utilities' {
   export { default as bindAll } from '@utilities/bindAll';
   export { default as memoize } from '@utilities/memoize';
   export { default as waitFor } from '@utilities/waitFor';
-  export { default as appendCSS } from '@utilities/appendCSS';
   export { default as capitalize } from '@utilities/capitalize';
   export { default as classnames } from '@utilities/classnames';
   export { default as findInTree } from '@utilities/findInTree';

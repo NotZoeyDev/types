@@ -32,6 +32,7 @@ jobs:
 
       - name: Build Docs
         run: |
+          npm i
           npm i -g typedoc
           cd ./build
           typedoc

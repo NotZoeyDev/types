@@ -1,12 +1,12 @@
-declare module '@components/SettingsItem' {
+declare module '@components/settings/SettingsItem' {
   /**
-   * A simple settings switch.
+   * A wrapper for settings-related components.
    */
   export default class SettingsItem extends React.Component<{
     title: string;
-    note?: string;
     required?: boolean;
     hasMargin?: boolean;
+    description?: string;
     children?: React.ReactNode;
   }> { }
 }

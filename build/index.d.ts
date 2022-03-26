@@ -31,33 +31,74 @@ declare interface Settings {
  */
 declare type Class = new (...args: any[]) => any;
 
-
 /**
  * The overwrite function argument for the "before" patch. 
  * @param {any} context - The "this" argument from the scope of the original function.
- * @param {IArguments} arguments - The arguments passed to the function as an array.
+ * @param {any[]} arguments - The arguments passed to the function as an array.
  * @param {any} original - The original function that you're patching.
- * @returns {IArguments | void} The arguments that will be passed to the original function (the default is the original arguments).
+ * @returns {any[] | void} The arguments that will be passed to the original function (the default is the original arguments).
  */
-declare type BeforeOverwrite = (context?: any, arguments?: IArguments, original?: Function) => IArguments | void;
+declare type BeforeOverwrite = (context?: any, arguments?: any[], original?: Function) => any[] | void;
 
 /**
  * The overwrite function argument for the "instead" patch.
  * @param {any} context - The "this" argument from the scope of the original function.
- * @param {IArguments} arguments - The arguments passed to the function as an array.
+ * @param {any[]} arguments - The arguments passed to the function as an array.
  * @param {Function} original - The original function that you're patching.
  * @returns {any | void} The value that is returned when the function is ran.
  */
-declare type InsteadOverwrite = (context?: any, arguments?: IArguments, original?: Function) => any | void;
+declare type InsteadOverwrite = (context?: any, arguments?: any[], original?: Function) => any | void;
 
 /**
  * The overwrite function argument for the "after" patch.
  * @param {any} context - The "this" argument from the scope of the original function.
- * @param {IArguments} arguments - The arguments passed to the function as an array.
+ * @param {any[]} arguments - The arguments passed to the function as an array.
  * @param {any} result - The original function return value.
  * @returns {any | void} The value that is returned when the function is ran (the default is the original return value). Tip: If you're mutating the return value directly and it's an object you don't have to return it because objects are references in JS!
  */
-declare type AfterOverwrite = (context?: any, arguments?: IArguments, result?: any) => any | void;
+declare type AfterOverwrite = (context?: any, arguments?: any[], result?: any) => any | void;
+
+declare module '@components/settings/SettingsItem' {
+  /**
+   * A wrapper for settings-related components.
+   */
+  export default class SettingsItem extends React.Component<{
+    title: string;
+    required?: boolean;
+    hasMargin?: boolean;
+    description?: string;
+    children?: React.ReactNode;
+  }> { }
+}
+
+declare module '@components/settings/TextInput' {
+  /**
+   * A simple component for inputting text.
+   */
+  export default class TextInput extends React.Component<{
+    title: string;
+    required?: boolean;
+    description?: string;
+    children?: React.ReactNode;
+
+    // Discord TextInput properties.
+    value: string;
+    name?: string;
+    type?: string;
+    style?: object;
+    disabled?: boolean;
+    maxLength?: number;
+    autoFocus?: boolean;
+    placeholder?: string;
+    size?: "default" | "mini";
+    onChange: (v: string) => void;
+  }> { }
+}
+
+declare module '@components/settings' {
+  export { default as TextInput } from '@components/settings/TextInput';
+  export { default as SettingsItem } from '@components/settings/SettingsItem';
+}
 
 declare module '@components/AsyncComponent' {
   /**
@@ -124,24 +165,11 @@ declare module '@components/Icon' {
   }
 }
 
-declare module '@components/SettingsItem' {
-  /**
-   * A simple settings switch.
-   */
-  export default class SettingsItem extends React.Component<{
-    title: string;
-    note?: string;
-    required?: boolean;
-    hasMargin?: boolean;
-    children?: React.ReactNode;
-  }> { }
-}
-
 declare module '@components' {
   export { default as Icon } from '@components/Icon';
   export { default as Category } from '@components/Category';
+  export { default as settings } from '@components/settings';
   export { default as ErrorState } from '@components/ErrorState';
-  export { default as SettingsItem } from '@components/SettingsItem';
   export { default as ErrorBoundary } from '@components/ErrorBoundary';
   export { default as AsyncComponent } from '@components/AsyncComponent';
   export { default as HorizontalDivider } from '@components/HorizontalDivider';
@@ -267,6 +295,26 @@ declare module '@api' {
   export { default as commands } from '@api/commands';
   export { default as announcements } from '@api/announcements';
 }
+
+interface ToastOptions {
+  id: string;
+}
+
+declare module '@api/toasts' {
+  /**
+   * Sends a toast.
+   * @returns {string} The sent toast's ID.
+   */
+  export function send(options: ToastOptions): string;
+
+  /**
+   * Closes a toast by its ID. 
+   */
+  export function close(id: string): void;
+
+  export * as default from '@api/toasts';
+}
+
 
 declare module '@constants' {
   import Theme from '@structures/theme';
@@ -463,15 +511,30 @@ interface DefaultOptions {
   defaultExport?: boolean;
 }
 
-interface BulkOptions extends DefaultOptions {
-  wait?: boolean;
+interface WaitForOptions {
+  retries?: number;
+  all?: boolean;
+  forever?: boolean;
+  delay?: number;
 }
 
-interface ExtendedOptions extends BulkOptions {
-  bulk?: boolean;
+interface ConditionalDefault extends DefaultOptions {
+  wait?: false;
 }
 
-interface DisplayNameOptions extends ExtendedOptions {
+interface ConditionalWaitFor extends WaitForOptions {
+  wait: true;
+}
+
+interface ConditionalBulk extends ConditionalDefault {
+  bulk: true;
+}
+
+interface ConditionalWaitBulk extends ConditionalWaitFor {
+  bulk: true;
+}
+
+interface DisplayNameOptions {
   default?: boolean;
 }
 
@@ -531,8 +594,12 @@ declare module '@webpack' {
    * getByProps('prop1', 'prop2');
    * ```
    */
-  export function getByProps(...options: [...props: string[], options: ExtendedOptions]): any;
-  export function findByProps(...options: [...props: string[], options: ExtendedOptions]): any;
+  export function getByProps(...options: [...props: string[], options: ConditionalDefault]): any;
+
+  /**
+   * Alias for getByProps.
+   */
+  export function findByProps(...options: [...props: string[], options: ConditionalDefault]): any;
 
   /**
    * Takes a displayName argument and searches webpack cache for a direct match.
@@ -543,32 +610,32 @@ declare module '@webpack' {
    * getByDisplayName('Switch', { default: false });
    * ```
    */
-  export function getByDisplayName(displayName: string, options?: DisplayNameOptions): any;
+  export function getByDisplayName(displayName: string, options?: DisplayNameOptions & ConditionalDefault): any;
 
   /**
    * Alias for getByDisplayName.
    */
-  export function findByDisplayName(displayName: string, options?: DisplayNameOptions): any;
+  export function findByDisplayName(displayName: string, options?: DisplayNameOptions & ConditionalDefault): any;
 
   /**
    * Converts all "stringable" modules to a string and searches for an indirect match much like getByProps.
    */
-  export function getByString(...options: [...strings: string[], options: ExtendedOptions]): any;
+  export function getByString(...options: [...strings: string[], options: ConditionalDefault]): any;
 
   /**
    * Alias for getByString.
    */
-  export function findByString(...options: [...strings: string[], options: ExtendedOptions]): any;
+  export function findByString(...options: [...strings: string[], options: ConditionalDefault]): any;
 
   /**
    * Similar to getByString except it stringifys the default export.
    */
-  export function getByDefaultString(...options: [...strings: string[], options: ExtendedOptions]): any;
+  export function getByDefaultString(...options: [...strings: string[], options: ConditionalDefault]): any;
 
   /**
    * Alias for getByDefaultString.
    */
-  export function findByDefaultString(...options: [...strings: string[], options: ExtendedOptions]): any;
+  export function findByDefaultString(...options: [...strings: string[], options: ConditionalDefault]): any;
 
   /**
    * A quicker way to fetch multiple modules at a time.
@@ -588,7 +655,7 @@ declare module '@webpack' {
    * );
    * ```
    */
-  export function bulk(...options: [...filters: SearchFilter[], options: BulkOptions]): any;
+  export function bulk(...options: [...filters: SearchFilter[], options: ConditionalDefault]): any;
 
   /**
    * Only to be used as a developer tool for finding modules.
@@ -604,12 +671,42 @@ declare module '@webpack' {
 
   // Overloads
   export function bulk(...filters: SearchFilter[]): any;
+  export function bulk(...options: [...filters: SearchFilter[], options: ConditionalWaitFor]): any;
+
   export function getByProps(...props: string[]): any;
+  export function getByProps(...options: [...props: string[], options: ConditionalWaitFor]);
+  export function getByProps(...options: [...props: (string | string[])[], options: ConditionalBulk]);
+  export function getByProps(...options: [...props: (string | string[])[], options: ConditionalWaitBulk]);
+
   export function findByProps(...props: string[]): any;
+  export function findByProps(...options: [...props: string[], options: ConditionalWaitFor]): any;
+  export function findByProps(...options: [...props: (string | string[])[], options: ConditionalBulk]): any;
+  export function findByProps(...options: [...props: (string | string[])[], options: ConditionalWaitBulk]): any;
+
+  export function getByDisplayName(displayName: string): any;
+  export function getByDisplayName(displayName: string, options: DisplayNameOptions & ConditionalWaitFor): any;
+  export function getByDisplayName(...options: [...displayNames: string[], options: DisplayNameOptions & ConditionalBulk]): any;
+  export function getByDisplayName(...options: [...displayNames: string[], options: DisplayNameOptions & ConditionalWaitBulk]): any;
+
   export function getByString(...strings: string[]): any;
+  export function getByString(...options: [...props: string[], options: ConditionalWaitFor]): any;
+  export function getByString(...options: [...props: (string | string[])[], options: ConditionalBulk]): any;
+  export function getByString(...options: [...props: (string | string[])[], options: ConditionalWaitBulk]): any;
+
   export function findByString(...strings: string[]): any;
+  export function findByString(...options: [...props: string[], options: ConditionalWaitFor]): any;
+  export function findByString(...options: [...props: (string | string[])[], options: ConditionalBulk]): any;
+  export function findByString(...options: [...props: (string | string[])[], options: ConditionalWaitBulk]): any;
+
   export function getByDefaultString(...strings: string[]): any;
+  export function getByDefaultString(...options: [...props: string[], options: ConditionalWaitFor]): any;
+  export function getByDefaultString(...options: [...props: (string | string[])[], options: ConditionalBulk]): any;
+  export function getByDefaultString(...options: [...props: (string | string[])[], options: ConditionalWaitBulk]): any;
+
   export function findByDefaultString(...strings: string[]): any;
+  export function findByDefaultString(...options: [...props: string[], options: ConditionalWaitFor]): any;
+  export function findByDefaultString(...options: [...props: (string | string[])[], options: ConditionalBulk]): any;
+  export function findByDefaultString(...options: [...props: (string | string[])[], options: ConditionalWaitBulk]): any;
 
   /**
    * Quick filters for the "bulk" function.
@@ -644,55 +741,7 @@ declare module '@webpack/common' {
   export * as default from '@webpack/common';
 }
 
-declare module '@structures/addon' {
-  export default class Addon {
-    constructor(instance: any);
-    instance: any;
-    started: boolean;
-
-    /**
-     * Function that is ran when the addon (plugin, theme) is enabled.
-     * 
-     * The "instance" argument is only used in themes, you can ignore it.
-     */
-    start(instance?: string): void;
-
-    /**
-     * Function that is ran when the user stops the addon (plugin, theme).
-     */
-    stop(): void;
-
-    /**
-     * Function that is ran regardless of wether or not the plugin is enabled.
-     */
-    load(): void;
-
-    /**
-     * Used internally to show on the plugin card (customizable);
-     */
-    get color(): string;
-
-    /**
-     * Returns the Manifest attatched to the addon.
-     */
-    get manifest(): Manifest;
-
-    /**
-     * @deprecated
-     */
-    get dependencies(): string[];
-  }
-}
-
-declare module '@structures' {
-  export { default as addon } from '@structures/addon';
-  export { default as theme } from '@structures/theme';
-  export { default as plugin } from '@structures/plugin';
-  export { default as manager } from '@structures/manager';
-  export { default as stacklesserror } from '@structures/stacklesserror';
-}
-
-declare module '@structures/manager' {
+declare module '@structures/managers/entities' {
   import { EventEmitter } from 'events';
 
   export default class Manager extends EventEmitter {
@@ -825,6 +874,58 @@ declare module '@structures/manager' {
      */
     get get(): (idOrName: string | object) => any;
   }
+}
+
+declare module '@structures/managers' {
+  export { default as entities } from '@structures/managers/entities';
+}
+
+declare module '@structures/addon' {
+  export default class Addon {
+    constructor(instance: any);
+    instance: any;
+    started: boolean;
+
+    /**
+     * Function that is ran when the addon (plugin, theme) is enabled.
+     * 
+     * The "instance" argument is only used in themes, you can ignore it.
+     */
+    start(instance?: string): void;
+
+    /**
+     * Function that is ran when the user stops the addon (plugin, theme).
+     */
+    stop(): void;
+
+    /**
+     * Function that is ran regardless of wether or not the plugin is enabled.
+     */
+    load(): void;
+
+    /**
+     * Used internally to show on the plugin card (customizable);
+     */
+    get color(): string;
+
+    /**
+     * Returns the Manifest attatched to the addon.
+     */
+    get manifest(): Manifest;
+
+    /**
+     * @deprecated
+     */
+    get dependencies(): string[];
+  }
+}
+
+declare module '@structures' {
+  export { default as addon } from '@structures/addon';
+  export { default as theme } from '@structures/theme';
+  export { default as plugin } from '@structures/plugin';
+  export { default as managers } from '@structures/managers';
+  export { default as stacklesserror } from '@structures/stacklesserror';
 }
 
 declare module '@structures/plugin' {

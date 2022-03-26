@@ -8,5 +8,5 @@ declare module '@utilities/findInReactTree' {
    * @return {any} Returns null if nothing is filtered or the value that is filtered.
    */
 
-  export default function (tree: object | any[], filter: (node: object | any[]) => boolean, options?: { ignore?: any[]; walkable?: any[]; maxProperties?: number; }): any;
+  export default function (tree: any, filter: (node: any) => boolean, options?: { ignore?: any[]; walkable?: any[]; maxProperties?: number; }): any;
 }

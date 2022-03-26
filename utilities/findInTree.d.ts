@@ -11,5 +11,5 @@ declare module '@utilities/findInTree' {
    * @return {function} Returns the function with a cacheable value
    */
 
-  export default function (tree: object | any[], filter: (node: object | any[]) => boolean, options?: { ignore?: any[]; walkable?: any[]; maxProperties?: number; }): any;
+  export default function (tree: any, filter: (node: any) => boolean, options?: { ignore?: any[]; walkable?: any[]; maxProperties?: number; }): any;
 }

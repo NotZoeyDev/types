@@ -1,7 +1,7 @@
 declare module '@components' {
+  export * as settings from '@components/settings';
   export { default as Icon } from '@components/Icon';
   export { default as Category } from '@components/Category';
-  export { default as settings } from '@components/settings';
   export { default as ErrorState } from '@components/ErrorState';
   export { default as ErrorBoundary } from '@components/ErrorBoundary';
   export { default as AsyncComponent } from '@components/AsyncComponent';

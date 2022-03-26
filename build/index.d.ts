@@ -31,6 +31,34 @@ declare interface Settings {
  */
 declare type Class = new (...args: any[]) => any;
 
+
+/**
+ * The overwrite function argument for the "before" patch. 
+ * @param {any} context - The "this" argument from the scope of the original function.
+ * @param {IArguments} arguments - The arguments passed to the function as an array.
+ * @param {any} original - The original function that you're patching.
+ * @returns {IArguments | void} The arguments that will be passed to the original function (the default is the original arguments).
+ */
+declare type BeforeOverwrite = (context?: any, arguments?: IArguments, original?: Function) => IArguments | void;
+
+/**
+ * The overwrite function argument for the "instead" patch.
+ * @param {any} context - The "this" argument from the scope of the original function.
+ * @param {IArguments} arguments - The arguments passed to the function as an array.
+ * @param {Function} original - The original function that you're patching.
+ * @returns {any | void} The value that is returned when the function is ran.
+ */
+declare type InsteadOverwrite = (context?: any, arguments?: IArguments, original?: Function) => any | void;
+
+/**
+ * The overwrite function argument for the "after" patch.
+ * @param {any} context - The "this" argument from the scope of the original function.
+ * @param {IArguments} arguments - The arguments passed to the function as an array.
+ * @param {any} result - The original function return value.
+ * @returns {any | void} The value that is returned when the function is ran (the default is the original return value). Tip: If you're mutating the return value directly and it's an object you don't have to return it because objects are references in JS!
+ */
+declare type AfterOverwrite = (context?: any, arguments?: IArguments, result?: any) => any | void;
+
 declare module '@components/AsyncComponent' {
   /**
    * Shows a "suspense" component while the first component is being asynchronously loaded.
@@ -382,24 +410,24 @@ declare module '@patcher' {
     getPatchesByCaller(id: string): Patch[];
 
     /**
-     * Unpatches all patches with the provided caller ID.
+     * Unpatches all patches for this patcher "create" instance.
      */
     unpatchAll(): void;
 
     /**
      * Takes any object (usually a module), a key to the function you want to overrite and runs the original function, then runs your own code.
      */
-    after(mdl: Function | object, func: string, callback: Function, once?: boolean): () => void;
+    after(mdl: Function | object, func: string, callback: AfterOverwrite, once?: boolean): () => void;
 
     /**
      * Same as after except it runs your code before.
      */
-    before(mdl: Function | object, func: string, callback: Function, once?: boolean): () => void;
+    before(mdl: Function | object, func: string, callback: BeforeOverwrite, once?: boolean): () => void;
 
     /**
      * Similar to the other patch functions except it overrites the function entirely only making it run what you specify.
      */
-    instead(mdl: Function | object, func: string, callback: Function, once?: boolean): () => void;
+    instead(mdl: Function | object, func: string, callback: InsteadOverwrite, once?: boolean): () => void;
   };
 
   /**
@@ -415,15 +443,15 @@ declare module '@patcher' {
   /**
    * Takes any object (usually a module), a key to the function you want to overrite and runs the original function, then runs your own code.
    */
-  export function after(caller: string, mdl: Function | object, func: string, callback: Function, once?: boolean): () => void;
+  export function after(caller: string, mdl: Function | object, func: string, callback: AfterOverwrite, once?: boolean): () => void;
   /**
    * Same as after except it runs your code before.
    */
-  export function before(caller: string, mdl: Function | object, func: string, callback: Function, once?: boolean): () => void;
+  export function before(caller: string, mdl: Function | object, func: string, callback: BeforeOverwrite, once?: boolean): () => void;
   /**
    * Similar to the other patch functions except it overrites the function entirely only making it run what you specify.
    */
-  export function instead(caller: string, mdl: Function | object, func: string, callback: Function, once?: boolean): () => void;
+  export function instead(caller: string, mdl: Function | object, func: string, callback: InsteadOverwrite, once?: boolean): () => void;
 
   export * as default from '@patcher';
 }
@@ -984,7 +1012,7 @@ declare module '@utilities/findInReactTree' {
    * @return {any} Returns null if nothing is filtered or the value that is filtered.
    */
 
-  export default function (tree: object | any[], filter: (node: object | any[]) => boolean, options?: { ignore?: any[]; walkable?: any[]; maxProperties?: number; }): any;
+  export default function (tree: any, filter: (node: any) => boolean, options?: { ignore?: any[]; walkable?: any[]; maxProperties?: number; }): any;
 }
 
 declare module '@utilities/findInTree' {
@@ -1000,7 +1028,7 @@ declare module '@utilities/findInTree' {
    * @return {function} Returns the function with a cacheable value
    */
 
-  export default function (tree: object | any[], filter: (node: object | any[]) => boolean, options?: { ignore?: any[]; walkable?: any[]; maxProperties?: number; }): any;
+  export default function (tree: any, filter: (node: any) => boolean, options?: { ignore?: any[]; walkable?: any[]; maxProperties?: number; }): any;
 }
 
 declare module '@utilities/getNestedProp' {

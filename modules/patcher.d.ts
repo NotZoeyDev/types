@@ -33,24 +33,24 @@ declare module '@patcher' {
     getPatchesByCaller(id: string): Patch[];
 
     /**
-     * Unpatches all patches with the provided caller ID.
+     * Unpatches all patches for this patcher "create" instance.
      */
     unpatchAll(): void;
 
     /**
      * Takes any object (usually a module), a key to the function you want to overrite and runs the original function, then runs your own code.
      */
-    after(mdl: Function | object, func: string, callback: Function, once?: boolean): () => void;
+    after(mdl: Function | object, func: string, callback: AfterOverwrite, once?: boolean): () => void;
 
     /**
      * Same as after except it runs your code before.
      */
-    before(mdl: Function | object, func: string, callback: Function, once?: boolean): () => void;
+    before(mdl: Function | object, func: string, callback: BeforeOverwrite, once?: boolean): () => void;
 
     /**
      * Similar to the other patch functions except it overrites the function entirely only making it run what you specify.
      */
-    instead(mdl: Function | object, func: string, callback: Function, once?: boolean): () => void;
+    instead(mdl: Function | object, func: string, callback: InsteadOverwrite, once?: boolean): () => void;
   };
 
   /**
@@ -66,15 +66,15 @@ declare module '@patcher' {
   /**
    * Takes any object (usually a module), a key to the function you want to overrite and runs the original function, then runs your own code.
    */
-  export function after(caller: string, mdl: Function | object, func: string, callback: Function, once?: boolean): () => void;
+  export function after(caller: string, mdl: Function | object, func: string, callback: AfterOverwrite, once?: boolean): () => void;
   /**
    * Same as after except it runs your code before.
    */
-  export function before(caller: string, mdl: Function | object, func: string, callback: Function, once?: boolean): () => void;
+  export function before(caller: string, mdl: Function | object, func: string, callback: BeforeOverwrite, once?: boolean): () => void;
   /**
    * Similar to the other patch functions except it overrites the function entirely only making it run what you specify.
    */
-  export function instead(caller: string, mdl: Function | object, func: string, callback: Function, once?: boolean): () => void;
+  export function instead(caller: string, mdl: Function | object, func: string, callback: InsteadOverwrite, once?: boolean): () => void;
 
   export * as default from '@patcher';
 }

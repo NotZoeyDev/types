@@ -16,6 +16,21 @@ declare interface Manifest {
   }[],
 }
 
+/**
+ * Flux Store proxy for addons.
+ */
+declare interface Settings {
+  settings: Record<string, any>;
+  get: (key: string, defaults: any) => Record<string, any>;
+  set: (key: string, defaults: any) => void;
+  toggle: (key: string, defaults: any) => void;
+}
+
+/**
+ * Any class instance.
+ */
+declare type Class = new (...args: any[]) => any;
+
 declare module '@components/AsyncComponent' {
   /**
    * Shows a "suspense" component while the first component is being asynchronously loaded.
@@ -540,7 +555,7 @@ declare module '@webpack' {
    * ] = bulk(
    *   filters.byProps('getUser', 'getCurrentUser'),
    *   filters.byProps('getStatusColor'),
-   *   filters.byDisplayName('MemberListItem')
+   *   filters.byDisplayName('MemberListItem'),
    *   filters.byDisplayName('PrivateChannel'),
    * );
    * ```
@@ -607,12 +622,31 @@ declare module '@structures/addon' {
     instance: any;
     started: boolean;
 
-    start(): void;
+    /**
+     * Function that is ran when the addon (plugin, theme) is enabled.
+     * 
+     * The "instance" argument is only used in themes, you can ignore it.
+     */
+    start(instance?: string): void;
+
+    /**
+     * Function that is ran when the user stops the addon (plugin, theme).
+     */
     stop(): void;
+
+    /**
+     * Function that is ran regardless of wether or not the plugin is enabled.
+     */
     load(): void;
 
+    /**
+     * Used internally to show on the plugin card (customizable);
+     */
     get color(): string;
 
+    /**
+     * Returns the Manifest attatched to the addon.
+     */
     get manifest(): Manifest;
 
     /**
@@ -636,53 +670,131 @@ declare module '@structures/manager' {
   export default class Manager extends EventEmitter {
     constructor(type: string);
 
+    /**
+     * The name of the manager.
+     */
     type: string;
+
+    /**
+     * Path of the folder where the entities/addons are stored.
+     */
     path: string;
 
-    entities: Map<string, any>;
+    /**
+     * Map of all entities.
+     */
+    entities: Map<string, Class>;
 
+    /**
+     * Auto-generated logger class instance for logging errors, warnings, ect.
+     */
     logger: import('@modules').logger;
 
-    settings: any;
+    /**
+     * The Flux Store proxy for interacting with the Plugin settings.
+     */
+    settings: Settings;
 
+    /**
+     * The settings panel item that shows up under the "unbound" category in SettingsView.
+     * 
+     * By default it's a normal panel item with this.type as the label.
+     */
     panel: React.ReactElement;
 
+    /**
+     * The FS watcher instance.
+     */
     watcher: import('fs').FSWatcher;
 
+    /**
+     * Calls the unload function for all entities and removes all watcher listeners.
+     */
     destroy(): void;
 
-    resolve(idOrName: string | object): any;
+    /**
+     * Gets an entity by its ID or name.
+     */
+    resolve(idOrName: string | object): Class;
 
+    /**
+     * Calls the "load" function on all entities.
+     */
     loadAll(): void;
 
+    /**
+     * Assigns data to the object paramater.
+     */
     assignData(data: any, object: object, path: string): void;
 
+    /**
+     * Throws if the manifest is invalid,.
+     */
     validateManifest(data: Manifest): void;
 
+    /**
+     * Runs the load function of an entity.
+     */
     load(id: string): { instance: any; };
 
+    /**
+     * Runs the start function of an entity.
+     */
     start(id: string): void;
 
+    /**
+     * Runs the stop function of an entity.
+     */
     stop(id: string): void;
 
+    /**
+     * Deletes the entity from entities and runs the stop function.
+     */
     unload(id: string): void;
 
+    /**
+     * Runs the "unload" function on all entities.
+     */
     unloadAll(): void;
 
+    /**
+     * Deletes the entity from the users files.
+     */
     delete(id: string): void;
 
+    /**
+     * Runs both the unload and load functions of an entity.
+     */
     reload(id: string, silent?: boolean): any;
 
+    /**
+     * Returns the manager directory file and dir names.
+     */
     fetch(): string[];
 
+    /**
+     * Checks if the entity is enabled.
+     */
     isEnabled(id: string): boolean;
 
+    /**
+     * Enables the entity.
+     */
     enable(id: string): void;
 
+    /**
+     * Disables the entity.
+     */
     disable(id: string): void;
 
+    /**
+     * Toggles the entity.
+     */
     toggle(id: string): void;
 
+    /**
+     * Alias to "resolve".
+     */
     get get(): (idOrName: string | object) => any;
   }
 }
@@ -693,9 +805,22 @@ declare module '@structures/plugin' {
   export default class Plugin extends Addon {
     constructor(instance: any, data: Manifest);
 
+    /**
+     * Auto-generated logger class instance for logging errors, warnings, ect.
+     */
     logger: import('@modules').logger;
-    settings: unknown;
-    styles: unknown[];
+
+    /**
+     * The Flux Store proxy for interacting with the Plugin settings.
+     */
+    settings: Settings;
+
+    /**
+     * Function that is called when the user hits the settings cog.
+     * 
+     * If you return nothing/void nothing will be rendered and the function will still run.
+     */
+    getSettingsPanel(): React.Component | void;
   }
 }
 
@@ -711,13 +836,43 @@ declare module '@structures/theme' {
   export default class Theme extends Addon {
     constructor(instance: any, data: Manifest);
 
+    /**
+     * Auto-generated logger class instance for logging errors, warnings, ect.
+     */
     logger: import('@modules').logger;
-    settings: unknown;
 
-    // @ts-ignore
-    start(css: unknown): void;
+    /**
+     * The Flux Store proxy for interacting with the Theme settings. 
+     */
+    settings: Settings;
 
+    /**
+     * Function that is ran when the Theme is started.
+     * 
+     * Make sure to add:
+     * ```
+     * super.start(css);
+     * ```
+     * at the end of your file!
+     */
+    start(css: string): void;
+
+    /**
+     * Optional *additional* cleanup for when the theme is disabled.
+     * 
+     * You will probably need to add:
+     * ```
+     * super.stop();
+     * ```
+     * Somewhere in the function!
+     */
     stop(): void;
+
+    /**
+     * Called internally to append styles to the DOM.
+     * 
+     * You probably won't need to touch this.
+     */
     apply(): void;
   }
 }

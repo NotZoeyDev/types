@@ -166,9 +166,9 @@ declare module '@components/Icon' {
 }
 
 declare module '@components' {
+  export * as settings from '@components/settings';
   export { default as Icon } from '@components/Icon';
   export { default as Category } from '@components/Category';
-  export { default as settings } from '@components/settings';
   export { default as ErrorState } from '@components/ErrorState';
   export { default as ErrorBoundary } from '@components/ErrorBoundary';
   export { default as AsyncComponent } from '@components/AsyncComponent';
@@ -199,31 +199,6 @@ declare module '@components' {
   export const Anchor: React.Component;
   export const Notices: React.Component;
   export const TextInput: React.Component;
-}
-
-declare module '@api/announcements' {
-  /**
-   * Send an announcement.
-   * @param options.color require('@components').Notices.NoticeColors
-   * @param options.callback Runs when the announcement is closed via the close button.
-   */
-  export function send(options: {
-    id: string;
-    color?: string;
-    message?: string;
-    callback?: Function;
-    button?: {
-      text: string;
-      onClick: Function;
-    };
-  }): string;
-
-  /**
-   * Close an announcement by its ID.
-   */
-  export function close(id: string): void;
-
-  export * as default from '@api/announcements';
 }
 
 declare module '@api/clyde' {
@@ -292,8 +267,85 @@ declare module '@api/commands' {
 
 declare module '@api' {
   export { default as clyde } from '@api/clyde';
+  export { default as toasts } from '@api/toasts';
   export { default as commands } from '@api/commands';
-  export { default as announcements } from '@api/announcements';
+  export { default as settings } from '@api/settings';
+}
+
+interface AllSettings {
+  [file: string]: Settings;
+}
+
+interface Settings {
+  [setting: string]: any;
+}
+
+type SubscribeCallback = (event: { setting: string; } & ({ defaults: any; } | { value: any; })) => void;
+
+declare module '@api/settings' {
+  /**
+   * Returns the entire settings object. The same as `settings.store.getAll();`.
+   */
+  export const settings: AllSettings;
+
+  /**
+   * Returns the whole flux store.
+   * 
+   * Unless you want to interact with other addon's settings I wouldn't touch this.
+   */
+  export const store: {
+    getSetting(file: string, setting: string, defaults: any): any;
+    get(file: string): Settings;
+    getAll(): AllSettings;
+    save(): void;
+  };
+
+  /**
+   * Sets an addon's setting.
+   */
+  export function set(file: string, setting: string, value: any): void;
+
+  /**
+   * Gets an addon's setting.
+   */
+  export function get(file: string, setting: string, defaults: any): any;
+
+  /**
+   * Toggles an addon's setting.
+   */
+  export function toggle(file: string, setting: string, defaults: any): void;
+
+  /**
+   * Connects a component to one specific addons settings.
+   */
+  export function connectComponent(component: React.Component<any, any>, file: string): React.Component;
+
+  /**
+   * Like `Patcher.create`, it's a shortcut for shortened basic settings functions.
+   */
+  export function makeStore(file: string): {
+    settings: Settings,
+    set: (key: string, value: any) => void;
+    get: (key: string, defaults: any) => any;
+    toggle: (key: string, defaults: any) => void;
+  };
+
+  /**
+   * Like `FluxDispatcher.subscribe` it subscribes to any change for an addons settings and runs the callback function with the change as the argument.
+   */
+  export function subscribe(file: string, callback: SubscribeCallback): void;
+
+  /**
+   *  Like `FluxDispatcher.unsubscribe` it unsubscribes a listener by its callback.
+   */
+  export function unsubscribe(file: string, callback: SubscribeCallback): void;
+
+  /**
+   * Similar to {@link connectComponent} except it returns the function that connects the stores rather than the already connected React Component.
+   */
+  export function connectStores(file: string): (connector: React.Component) => React.Component;
+
+  export * as default from '@api/settings';
 }
 
 interface ToastOptions {
@@ -921,10 +973,10 @@ declare module '@structures/addon' {
 }
 
 declare module '@structures' {
+  export * as managers from '@structures/managers';
   export { default as addon } from '@structures/addon';
   export { default as theme } from '@structures/theme';
   export { default as plugin } from '@structures/plugin';
-  export { default as managers } from '@structures/managers';
   export { default as stacklesserror } from '@structures/stacklesserror';
 }
 
@@ -998,6 +1050,13 @@ declare module '@structures/theme' {
     stop(): void;
 
     /**
+     * Called on settings change.
+     * 
+     * By default it reloads the Theme.
+     */
+    onSettingsChange(): void;
+
+    /**
      * Called internally to append styles to the DOM.
      * 
      * You probably won't need to touch this.
@@ -1056,6 +1115,18 @@ declare module '@utilities/createStore' {
     storage: any,
     id: string,
   };
+}
+
+declare module '@utilities/debounce' {
+  /**
+ * @name debounce
+ * @description Throttles a function by the provided milliseconds
+ * @param {function} func - The function to debounce
+ * @param {number} ms - The milliseconds to debounce the function by
+ * @return {function} Returns an instance of the function wrapped in a debounce
+ */
+
+  export default function (func: Function, ms: number): Function;
 }
 
 declare module '@utilities/dom' {
@@ -1132,6 +1203,17 @@ declare module '@utilities/findInTree' {
   export default function (tree: any, filter: (node: any) => boolean, options?: { ignore?: any[]; walkable?: any[]; maxProperties?: number; }): any;
 }
 
+declare module '@utilities/forceUpdateElement' {
+  /**
+ * @name forceUpdateElement
+ * @description Force updates a rendered React component by its DOM selector
+ * @param {string} selector - The DOM selector to force update
+ * @param {boolean} all - Whether all elements matching that selector should be force updated
+ */
+
+  export default function (selector: string, all: boolean): Promise<void>;
+}
+
 declare module '@utilities/getNestedProp' {
   /**
    * @name getNestedProp
@@ -1180,6 +1262,7 @@ declare module '@utilities' {
   export { default as bindAll } from '@utilities/bindAll';
   export { default as memoize } from '@utilities/memoize';
   export { default as waitFor } from '@utilities/waitFor';
+  export { default as debounce } from '@utilities/debounce';
   export { default as capitalize } from '@utilities/capitalize';
   export { default as classnames } from '@utilities/classnames';
   export { default as findInTree } from '@utilities/findInTree';
@@ -1190,6 +1273,7 @@ declare module '@utilities' {
   export { default as getOwnerInstance } from '@utilities/getOwnerInstance';
   export { default as getReactInstance } from '@utilities/getReactInstance';
   export { default as parseStyleObject } from '@utilities/parseStyleObject';
+  export { default as forceUpdateElement } from '@utilities/forceUpdateElement';
 }
 
 declare module '@utilities/memoize' {

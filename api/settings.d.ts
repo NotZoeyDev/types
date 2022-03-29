@@ -17,7 +17,7 @@ declare module '@api/settings' {
   /**
    * Returns the whole flux store.
    * 
-   * Unless you want to interact with other addon's settings I wouldn't touch this.
+   * You probably wont need to touch this.
    */
   export const store: {
     getSetting(file: string, setting: string, defaults: any): any;

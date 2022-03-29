@@ -17,7 +17,7 @@ declare module '@components/settings/TextInput' {
     maxLength?: number;
     autoFocus?: boolean;
     placeholder?: string;
-    size?: "default" | "mini";
+    size?: 'default' | 'mini';
     onChange: (v: string) => void;
   }> { }
 }

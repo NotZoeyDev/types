@@ -7,12 +7,5 @@ declare module '@utilities/createStore' {
    * & its data and functions that go along with it.
    */
 
-  export default function (data: object): {
-    get: (key: string, defaults?: any) => any,
-    set: (key: string, value?: any) => any,
-    delete: (key: string) => any,
-    store: any,
-    storage: any,
-    id: string,
-  };
+  export default function (data: object): GenericStore;
 }

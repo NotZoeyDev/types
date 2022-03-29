@@ -57,3 +57,12 @@ declare type InsteadOverwrite = (context?: any, arguments?: any[], original?: Fu
  * @returns {any | void} The value that is returned when the function is ran (the default is the original return value). Tip: If you're mutating the return value directly and it's an object you don't have to return it because objects are references in JS!
  */
 declare type AfterOverwrite = (context?: any, arguments?: any[], result?: any) => any | void;
+
+interface GenericStore {
+  get: (key: string, defaults?: any) => any,
+  set: (key: string, value?: any) => any,
+  delete: (key: string) => any,
+  store: any,
+  storage: any,
+  id: string,
+}

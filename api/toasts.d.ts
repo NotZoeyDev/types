@@ -4,6 +4,11 @@ interface ToastOptions {
 
 declare module '@api/toasts' {
   /**
+   * The toasts flux store.
+   */
+  export const toasts: GenericStore;
+
+  /**
    * Sends a toast.
    * @returns {string} The sent toast's ID.
    */

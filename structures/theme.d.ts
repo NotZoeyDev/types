@@ -37,6 +37,13 @@ declare module '@structures/theme' {
     stop(): void;
 
     /**
+     * Called on settings change.
+     * 
+     * By default it reloads the Theme.
+     */
+    onSettingsChange(): void;
+
+    /**
      * Called internally to append styles to the DOM.
      * 
      * You probably won't need to touch this.

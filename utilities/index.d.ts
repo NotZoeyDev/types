@@ -6,6 +6,7 @@ declare module '@utilities' {
   export { default as bindAll } from '@utilities/bindAll';
   export { default as memoize } from '@utilities/memoize';
   export { default as waitFor } from '@utilities/waitFor';
+  export { default as debounce } from '@utilities/debounce';
   export { default as capitalize } from '@utilities/capitalize';
   export { default as classnames } from '@utilities/classnames';
   export { default as findInTree } from '@utilities/findInTree';

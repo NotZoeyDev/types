@@ -2,6 +2,12 @@ declare module '@structures/addon' {
   export default class Addon {
     constructor(instance: any);
     instance: any;
+
+    /**
+     * The current state of the addon.
+     * 
+     * Useful for proper cleanup of plugins using lazy webpack search.
+     */
     started: boolean;
 
     /**

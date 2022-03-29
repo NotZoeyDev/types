@@ -17,5 +17,5 @@ declare module '@utilities' {
   export { default as getOwnerInstance } from '@utilities/getOwnerInstance';
   export { default as getReactInstance } from '@utilities/getReactInstance';
   export { default as parseStyleObject } from '@utilities/parseStyleObject';
-  export { default as forceUpdateElement } from '@utilities/forceUpdateElement';
+  // export { default as forceUpdateElement } from '@utilities/forceUpdateElement';
 }

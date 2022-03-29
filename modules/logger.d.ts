@@ -2,6 +2,9 @@ declare module '@modules/logger' {
   export default class Logger {
     constructor(...name: string[]);
 
+    /**
+     * Logger tags for the current instance.
+     */
     name: string[];
 
     /**
@@ -20,5 +23,10 @@ declare module '@modules/logger' {
      * Green colored log (for successfuly operations).
      */
     success: (...args: any[]) => void;
+
+    /**
+     * Alias to `new Logger(...names: string[])`.
+     */
+    static createLogger(...names: string[]): Logger;
   }
 }

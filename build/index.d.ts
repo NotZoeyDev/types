@@ -58,6 +58,15 @@ declare type InsteadOverwrite = (context?: any, arguments?: any[], original?: Fu
  */
 declare type AfterOverwrite = (context?: any, arguments?: any[], result?: any) => any | void;
 
+interface GenericStore {
+  get: (key: string, defaults?: any) => any,
+  set: (key: string, value?: any) => any,
+  delete: (key: string) => any,
+  store: any,
+  storage: any,
+  id: string,
+}
+
 declare module '@components/settings/SettingsItem' {
   /**
    * A wrapper for settings-related components.
@@ -90,7 +99,7 @@ declare module '@components/settings/TextInput' {
     maxLength?: number;
     autoFocus?: boolean;
     placeholder?: string;
-    size?: "default" | "mini";
+    size?: 'default' | 'mini';
     onChange: (v: string) => void;
   }> { }
 }
@@ -103,7 +112,9 @@ declare module '@components/settings' {
 declare module '@components/AsyncComponent' {
   /**
    * Shows a "suspense" component while the first component is being asynchronously loaded.
-   */
+   * 
+   * This is a component but it's being typed as an object so people aren't confused about how to use it. 
+   * */
   const AsyncComponent: {
     from(promise: () => Promise<React.Component>, suspense: React.Component): React.NamedExoticComponent;
   };
@@ -291,7 +302,7 @@ declare module '@api/settings' {
   /**
    * Returns the whole flux store.
    * 
-   * Unless you want to interact with other addon's settings I wouldn't touch this.
+   * You probably wont need to touch this.
    */
   export const store: {
     getSetting(file: string, setting: string, defaults: any): any;
@@ -354,6 +365,11 @@ interface ToastOptions {
 
 declare module '@api/toasts' {
   /**
+   * The toasts flux store.
+   */
+  export const toasts: GenericStore;
+
+  /**
    * Sends a toast.
    * @returns {string} The sent toast's ID.
    */
@@ -366,7 +382,6 @@ declare module '@api/toasts' {
 
   export * as default from '@api/toasts';
 }
-
 
 declare module '@constants' {
   import Theme from '@structures/theme';
@@ -454,6 +469,9 @@ declare module '@modules/logger' {
   export default class Logger {
     constructor(...name: string[]);
 
+    /**
+     * Logger tags for the current instance.
+     */
     name: string[];
 
     /**
@@ -472,6 +490,11 @@ declare module '@modules/logger' {
      * Green colored log (for successfuly operations).
      */
     success: (...args: any[]) => void;
+
+    /**
+     * Alias to `new Logger(...names: string[])`.
+     */
+    static createLogger(...names: string[]): Logger;
   }
 }
 
@@ -1107,14 +1130,7 @@ declare module '@utilities/createStore' {
    * & its data and functions that go along with it.
    */
 
-  export default function (data: object): {
-    get: (key: string, defaults?: any) => any,
-    set: (key: string, value?: any) => any,
-    delete: (key: string) => any,
-    store: any,
-    storage: any,
-    id: string,
-  };
+  export default function (data: object): GenericStore;
 }
 
 declare module '@utilities/debounce' {
@@ -1203,16 +1219,16 @@ declare module '@utilities/findInTree' {
   export default function (tree: any, filter: (node: any) => boolean, options?: { ignore?: any[]; walkable?: any[]; maxProperties?: number; }): any;
 }
 
-declare module '@utilities/forceUpdateElement' {
-  /**
- * @name forceUpdateElement
- * @description Force updates a rendered React component by its DOM selector
- * @param {string} selector - The DOM selector to force update
- * @param {boolean} all - Whether all elements matching that selector should be force updated
- */
+// declare module '@utilities/forceUpdateElement' {
+//   /**
+//  * @name forceUpdateElement
+//  * @description Force updates a rendered React component by its DOM selector
+//  * @param {string} selector - The DOM selector to force update
+//  * @param {boolean} all - Whether all elements matching that selector should be force updated
+//  */
 
-  export default function (selector: string, all: boolean): Promise<void>;
-}
+//   export default function (selector: string, all: boolean): Promise<void>;
+// }
 
 declare module '@utilities/getNestedProp' {
   /**
@@ -1273,7 +1289,7 @@ declare module '@utilities' {
   export { default as getOwnerInstance } from '@utilities/getOwnerInstance';
   export { default as getReactInstance } from '@utilities/getReactInstance';
   export { default as parseStyleObject } from '@utilities/parseStyleObject';
-  export { default as forceUpdateElement } from '@utilities/forceUpdateElement';
+  // export { default as forceUpdateElement } from '@utilities/forceUpdateElement';
 }
 
 declare module '@utilities/memoize' {

@@ -8,7 +8,7 @@ declare module '@components/settings/TextInput' {
     description?: string;
     children?: React.ReactNode;
 
-    // Discord TextInput properties.
+    // Discord properties
     value: string;
     name?: string;
     type?: string;

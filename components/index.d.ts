@@ -23,7 +23,7 @@ declare module '@components' {
   export const Tooltip: React.Component;
   export const RelativeTooltip: React.Component;
   export const Menu: React.Component;
-  export const Divider: React.Component;
+  export const FormDivider: React.Component;
   export const Switch: React.Component;
   export const Markdown: React.Component;
   export const SearchBar: React.Component;

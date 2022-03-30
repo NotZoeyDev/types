@@ -67,6 +67,57 @@ interface GenericStore {
   id: string,
 }
 
+const { getByDisplayName } = require('@webpack');
+const { React } = require('@webpack/common');
+
+const SelectWrapper = getByDisplayName('SelectTempWrapper');
+const SettingsItem = require('./SettingsItem');
+
+module.exports = class TextInput extends React.PureComponent {
+  render() {
+    const { title, description, required } = this.props;
+    const children = this.props.children;
+    delete this.props.children;
+
+    return (
+      <SettingsItem
+            title= { title };
+    description = { description };
+    required = { required };
+    hasMargin = { true}
+      >
+      <SelectWrapper { ...this.props } />
+      { children }
+      < /SettingsItem>
+      );
+  }
+};
+
+declare module '@components/settings/Select' {
+  /**
+   * A simple component for inputting text.
+   */
+  export default class Select extends React.Component<{
+    title: string;
+    required?: boolean;
+    description?: string;
+    children?: React.ReactNode;
+
+    // Discord properties
+    value: any;
+    isMulti?: boolean;
+    className?: string;
+    disabled?: boolean;
+    clearable?: boolean;
+    searchable?: boolean;
+    options: { value: any, label: string; }[];
+    onChange: (v: { value: any, label: string; }) => void;
+
+    // cba to type the rest
+    [prop: string]: any;
+  }> { }
+}
+
 declare module '@components/settings/SettingsItem' {
   /**
    * A wrapper for settings-related components.
@@ -80,6 +131,26 @@ declare module '@components/settings/SettingsItem' {
   }> { }
 }
 
+declare module '@components/settings/Switch' {
+  /**
+   * A simple component for inputting text.
+   */
+  export default class Switch extends React.Component<{
+    title: string;
+    required?: boolean;
+    description?: string;
+
+    // Discord properties
+    id?: string;
+    checked: boolean;
+    disabled?: boolean;
+    className?: string;
+    focusProps?: object;
+    innerRef?: React.Ref<any>;
+    onChange: (v: boolean) => void;
+  }> { }
+}
+
 declare module '@components/settings/TextInput' {
   /**
    * A simple component for inputting text.
@@ -90,7 +161,7 @@ declare module '@components/settings/TextInput' {
     description?: string;
     children?: React.ReactNode;
 
-    // Discord TextInput properties.
+    // Discord properties
     value: string;
     name?: string;
     type?: string;
@@ -136,6 +207,24 @@ declare module '@components/Category' {
   }> { }
 }
 
+declare module '@components/Divider' {
+  /**
+   * A simple divider component.
+   */
+  export default class Divider extends React.Component<{
+    width?: string;
+    height?: string;
+    margin?: string;
+    background?: string;
+    direction: 'VERTICAL' | 'HORIZONTAL';
+  } & (({ direction: 'VERITCAL'; } & HTMLDivElement) | {})> {
+    static Directions: {
+      HORIZONTAL: 'HORIZONTAL';
+      VERTICAL: 'VERTICAL';
+    };
+  }
+}
+
 declare module '@components/ErrorBoundary' {
   /**
    * A wrapper to catch a component in the event that it throws a React invariant error.
@@ -149,16 +238,6 @@ declare module '@components/ErrorState' {
    */
   export default class ErrorState extends React.Component<{
     text?: string;
-  }> { }
-}
-
-declare module '@components/HorizontalDivider' {
-  /**
-   * A simple divider component.
-   */
-  export default class HorizontalDivider extends React.Component<{
-    height?: string;
-    width?: string;
   }> { }
 }
 
@@ -179,11 +258,11 @@ declare module '@components/Icon' {
 declare module '@components' {
   export * as settings from '@components/settings';
   export { default as Icon } from '@components/Icon';
+  export { default as Divider } from '@components/Divider';
   export { default as Category } from '@components/Category';
   export { default as ErrorState } from '@components/ErrorState';
   export { default as ErrorBoundary } from '@components/ErrorBoundary';
   export { default as AsyncComponent } from '@components/AsyncComponent';
-  export { default as HorizontalDivider } from '@components/HorizontalDivider';
 
   export const Button: React.Component;
   export const FormNotice: React.Component;
@@ -959,6 +1038,12 @@ declare module '@structures/addon' {
   export default class Addon {
     constructor(instance: any);
     instance: any;
+
+    /**
+     * The current state of the addon.
+     * 
+     * Useful for proper cleanup of plugins using lazy webpack search.
+     */
     started: boolean;
 
     /**

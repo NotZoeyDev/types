@@ -1,11 +1,11 @@
 declare module '@components' {
   export * as settings from '@components/settings';
   export { default as Icon } from '@components/Icon';
+  export { default as Divider } from '@components/Divider';
   export { default as Category } from '@components/Category';
   export { default as ErrorState } from '@components/ErrorState';
   export { default as ErrorBoundary } from '@components/ErrorBoundary';
   export { default as AsyncComponent } from '@components/AsyncComponent';
-  export { default as HorizontalDivider } from '@components/HorizontalDivider';
 
   export const Button: React.Component;
   export const FormNotice: React.Component;

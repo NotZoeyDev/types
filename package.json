@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0",
   "name": "unbound-types",
+  "version": "1.0.0",
   "author": "Swishilicous",
   "description": "Typings for the Unbound Discord Client Mod.",
   "types": "build/index.d.ts",

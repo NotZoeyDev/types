@@ -71,7 +71,7 @@ declare module '@components/settings/Select' {
   /**
    * A simple component for inputting text.
    */
-  export default class Select extends JSX.Element<{
+  export default class Select extends React.Component<{
     title: string;
     required?: boolean;
     description?: string;
@@ -96,7 +96,7 @@ declare module '@components/settings/SettingsItem' {
   /**
    * A wrapper for settings-related components.
    */
-  export default class SettingsItem extends JSX.Element<{
+  export default class SettingsItem extends React.Component<{
     title: string;
     required?: boolean;
     hasMargin?: boolean;
@@ -109,7 +109,7 @@ declare module '@components/settings/Switch' {
   /**
    * A simple component for inputting text.
    */
-  export default class Switch extends JSX.Element<{
+  export default class Switch extends React.Component<{
     title: string;
     required?: boolean;
     description?: string;
@@ -129,7 +129,7 @@ declare module '@components/settings/TextInput' {
   /**
    * A simple component for inputting text.
    */
-  export default class TextInput extends JSX.Element<{
+  export default class TextInput extends React.Component<{
     title: string;
     required?: boolean;
     description?: string;
@@ -171,7 +171,7 @@ declare module '@components/Category' {
   /**
    * A sexy component for grouping React components.
    */
-  export default class Category extends JSX.Element<{
+  export default class Category extends React.Component<{
     title: string;
     description: string;
     opened: boolean;
@@ -185,7 +185,7 @@ declare module '@components/Divider' {
   /**
    * A simple divider component.
    */
-  export default class Divider extends JSX.Element<{
+  export default class Divider extends React.Component<{
     width?: string;
     height?: string;
     margin?: string;
@@ -203,14 +203,14 @@ declare module '@components/ErrorBoundary' {
   /**
    * A wrapper to catch a component in the event that it throws a React invariant error.
    */
-  export default class ErrorBoundary extends JSX.Element { }
+  export default class ErrorBoundary extends React.Component { }
 }
 
 declare module '@components/ErrorState' {
   /**
    * A simple error message component.
    */
-  export default class ErrorState extends JSX.Element<{
+  export default class ErrorState extends React.Component<{
     text?: string;
   }> { }
 }
@@ -221,7 +221,7 @@ declare module '@components/Icon' {
    * 
    * Input the displayName of the icon with the "name" property.
    */
-  export default class Icon extends JSX.Element<{
+  export default class Icon extends React.Component<{
     name: string;
     [prop: string]: any;
   }> {
@@ -382,7 +382,7 @@ declare module '@api/settings' {
   /**
    * Connects a component to one specific addons settings.
    */
-  export function connectComponent(component: JSX.Element<any, any>, file: string): JSX.Element;
+  export function connectComponent(component: JSX.Element, file: string): JSX.Element;
 
   /**
    * Like `Patcher.create`, it's a shortcut for shortened basic settings functions.
@@ -859,10 +859,10 @@ declare module '@webpack/common' {
   export const messages: any;
   export const Dispatcher: any;
   export const contextMenu: any;
-  export const HighlightJS: any;
   export const constants: constants;
   export function zustand(): Function;
   export const channels: SelectedStore;
+  export const HighlightJS: typeof hljs;
   export const React: typeof import('react');
   export const ReactDOM: typeof import('react-dom');
 
@@ -1416,3 +1416,4 @@ declare module '@utilities/waitFor' {
 
   export default function (selector: string): Promise<HTMLElement>;
 }
+

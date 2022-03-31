@@ -8,7 +8,7 @@ declare module '@components/Divider' {
     margin?: string;
     background?: string;
     direction: 'VERTICAL' | 'HORIZONTAL';
-  } & (({ direction: 'VERITCAL'; } & HTMLDivElement) | {})> {
+  } & (({ direction: 'HORIZONTAL'; } & HTMLDivElement) | {})> {
     static Directions: {
       HORIZONTAL: 'HORIZONTAL';
       VERTICAL: 'VERTICAL';

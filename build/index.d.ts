@@ -191,7 +191,7 @@ declare module '@components/Divider' {
     margin?: string;
     background?: string;
     direction: 'VERTICAL' | 'HORIZONTAL';
-  } & (({ direction: 'VERITCAL'; } & HTMLDivElement) | {})> {
+  } & (({ direction: 'HORIZONTAL'; } & HTMLDivElement) | {})> {
     static Directions: {
       HORIZONTAL: 'HORIZONTAL';
       VERTICAL: 'VERTICAL';
@@ -1271,7 +1271,7 @@ declare module '@utilities/findInTree' {
    * @param {object} options - The options for the search
    * @param {array} [options.ignore=[]] - The keys to ignore in the search
    * @param {array} [options.walkable=[]] - The keys to walk/traverse in the search
-   * @param {array} [options.maxProperties=100] - The keys to walk/traverse in the search
+   * @param {number} [options.maxProperties=100] - The keys to walk/traverse in the search
    * @return {function} Returns the function with a cacheable value
    */
 
@@ -1294,11 +1294,11 @@ declare module '@utilities/getNestedProp' {
    * @name getNestedProp
    * @description Gets a nested prop from an object safely by returning null if nothing is found
    * @param {object} object - The object to get the nested prop from
-   * @param {string} prop - The filter to run on the tree passed as the first argument
+   * @param {string} path - The path to the nested prop
    * @return {any} Returns null if no prop is found or the prop if it's found.
    */
 
-  export default function (object: object, prop: string): any;
+  export default function (object: object, path: string): any;
 }
 
 declare module '@utilities/getNestedType' {

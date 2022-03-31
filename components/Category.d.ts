@@ -7,7 +7,7 @@ declare module '@components/Category' {
     description: string;
     opened: boolean;
     onChange: Function;
-    children: React.Component;
-    icon: () => React.Component;
+    children: JSX.Element;
+    icon: () => JSX.Element;
   }> { }
 }

@@ -1,3 +1,3 @@
 declare module '@utilities/getNestedType' {
-  export default function getNestedType(component: React.Component): any;
+  export default function getNestedType(component: JSX.Element): any;
 }

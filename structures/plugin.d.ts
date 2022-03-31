@@ -19,6 +19,6 @@ declare module '@structures/plugin' {
      * 
      * If you return nothing/void nothing will be rendered and the function will still run.
      */
-    getSettingsPanel(): React.Component | void;
+    getSettingsPanel(): JSX.Element | void;
   }
 }

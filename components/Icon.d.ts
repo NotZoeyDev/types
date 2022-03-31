@@ -8,6 +8,6 @@ declare module '@components/Icon' {
     name: string;
     [prop: string]: any;
   }> {
-    static get Names(): React.Component[];
+    static get Names(): JSX.Element[];
   }
 }

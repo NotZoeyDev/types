@@ -44,7 +44,7 @@ declare module '@api/settings' {
   /**
    * Connects a component to one specific addons settings.
    */
-  export function connectComponent(component: React.Component<any, any>, file: string): React.Component;
+  export function connectComponent(component: JSX.Element, file: string): JSX.Element;
 
   /**
    * Like `Patcher.create`, it's a shortcut for shortened basic settings functions.
@@ -69,7 +69,7 @@ declare module '@api/settings' {
   /**
    * Similar to {@link connectComponent} except it returns the function that connects the stores rather than the already connected React Component.
    */
-  export function connectStores(file: string): (connector: React.Component) => React.Component;
+  export function connectStores(file: string): (connector: JSX.Element) => JSX.Element;
 
   export * as default from '@api/settings';
 }

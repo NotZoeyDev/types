@@ -71,7 +71,7 @@ declare module '@components/settings/Select' {
   /**
    * A simple component for inputting text.
    */
-  export default class Select extends React.Component<{
+  export default class Select extends JSX.Element<{
     title: string;
     required?: boolean;
     description?: string;
@@ -96,7 +96,7 @@ declare module '@components/settings/SettingsItem' {
   /**
    * A wrapper for settings-related components.
    */
-  export default class SettingsItem extends React.Component<{
+  export default class SettingsItem extends JSX.Element<{
     title: string;
     required?: boolean;
     hasMargin?: boolean;
@@ -109,7 +109,7 @@ declare module '@components/settings/Switch' {
   /**
    * A simple component for inputting text.
    */
-  export default class Switch extends React.Component<{
+  export default class Switch extends JSX.Element<{
     title: string;
     required?: boolean;
     description?: string;
@@ -129,7 +129,7 @@ declare module '@components/settings/TextInput' {
   /**
    * A simple component for inputting text.
    */
-  export default class TextInput extends React.Component<{
+  export default class TextInput extends JSX.Element<{
     title: string;
     required?: boolean;
     description?: string;
@@ -161,7 +161,7 @@ declare module '@components/AsyncComponent' {
    * This is a component but it's being typed as an object so people aren't confused about how to use it. 
    * */
   const AsyncComponent: {
-    from(promise: () => Promise<React.Component>, suspense: React.Component): React.NamedExoticComponent;
+    from(promise: () => Promise<JSX.Element>, suspense: JSX.Element): React.NamedExoticComponent;
   };
 
   export default AsyncComponent;
@@ -171,13 +171,13 @@ declare module '@components/Category' {
   /**
    * A sexy component for grouping React components.
    */
-  export default class Category extends React.Component<{
+  export default class Category extends JSX.Element<{
     title: string;
     description: string;
     opened: boolean;
     onChange: Function;
-    children: React.Component;
-    icon: () => React.Component;
+    children: JSX.Element;
+    icon: () => JSX.Element;
   }> { }
 }
 
@@ -185,7 +185,7 @@ declare module '@components/Divider' {
   /**
    * A simple divider component.
    */
-  export default class Divider extends React.Component<{
+  export default class Divider extends JSX.Element<{
     width?: string;
     height?: string;
     margin?: string;
@@ -203,14 +203,14 @@ declare module '@components/ErrorBoundary' {
   /**
    * A wrapper to catch a component in the event that it throws a React invariant error.
    */
-  export default class ErrorBoundary extends React.Component { }
+  export default class ErrorBoundary extends JSX.Element { }
 }
 
 declare module '@components/ErrorState' {
   /**
    * A simple error message component.
    */
-  export default class ErrorState extends React.Component<{
+  export default class ErrorState extends JSX.Element<{
     text?: string;
   }> { }
 }
@@ -221,11 +221,11 @@ declare module '@components/Icon' {
    * 
    * Input the displayName of the icon with the "name" property.
    */
-  export default class Icon extends React.Component<{
+  export default class Icon extends JSX.Element<{
     name: string;
     [prop: string]: any;
   }> {
-    static get Names(): React.Component[];
+    static get Names(): JSX.Element[];
   }
 }
 
@@ -238,31 +238,31 @@ declare module '@components' {
   export { default as ErrorBoundary } from '@components/ErrorBoundary';
   export { default as AsyncComponent } from '@components/AsyncComponent';
 
-  export const Button: React.Component;
-  export const FormNotice: React.Component;
-  export const Card: React.Component;
-  export const Caret: React.Component;
-  export const Clickable: React.Component;
-  export const Spinner: React.Component;
-  export const FormTitle: React.Component;
-  export const FormItem: React.Component;
-  export const FormText: React.Component;
-  export const HeaderBar: React.Component;
-  export const TabBar: React.Component;
-  export const Text: React.Component;
-  export const Flex: React.Component;
-  export const Tooltip: React.Component;
-  export const RelativeTooltip: React.Component;
-  export const Menu: React.Component;
-  export const FormDivider: React.Component;
-  export const Switch: React.Component;
-  export const Markdown: React.Component;
-  export const SearchBar: React.Component;
-  export const ScrollerThin: React.Component;
-  export const Popout: React.Component;
-  export const Anchor: React.Component;
-  export const Notices: React.Component;
-  export const TextInput: React.Component;
+  export const Button: JSX.Element;
+  export const FormNotice: JSX.Element;
+  export const Card: JSX.Element;
+  export const Caret: JSX.Element;
+  export const Clickable: JSX.Element;
+  export const Spinner: JSX.Element;
+  export const FormTitle: JSX.Element;
+  export const FormItem: JSX.Element;
+  export const FormText: JSX.Element;
+  export const HeaderBar: JSX.Element;
+  export const TabBar: JSX.Element;
+  export const Text: JSX.Element;
+  export const Flex: JSX.Element;
+  export const Tooltip: JSX.Element;
+  export const RelativeTooltip: JSX.Element;
+  export const Menu: JSX.Element;
+  export const FormDivider: JSX.Element;
+  export const Switch: JSX.Element;
+  export const Markdown: JSX.Element;
+  export const SearchBar: JSX.Element;
+  export const ScrollerThin: JSX.Element;
+  export const Popout: JSX.Element;
+  export const Anchor: JSX.Element;
+  export const Notices: JSX.Element;
+  export const TextInput: JSX.Element;
 }
 
 declare module '@api/clyde' {
@@ -382,7 +382,7 @@ declare module '@api/settings' {
   /**
    * Connects a component to one specific addons settings.
    */
-  export function connectComponent(component: React.Component<any, any>, file: string): React.Component;
+  export function connectComponent(component: JSX.Element<any, any>, file: string): JSX.Element;
 
   /**
    * Like `Patcher.create`, it's a shortcut for shortened basic settings functions.
@@ -407,7 +407,7 @@ declare module '@api/settings' {
   /**
    * Similar to {@link connectComponent} except it returns the function that connects the stores rather than the already connected React Component.
    */
-  export function connectStores(file: string): (connector: React.Component) => React.Component;
+  export function connectStores(file: string): (connector: JSX.Element) => JSX.Element;
 
   export * as default from '@api/settings';
 }
@@ -1083,7 +1083,7 @@ declare module '@structures/plugin' {
      * 
      * If you return nothing/void nothing will be rendered and the function will still run.
      */
-    getSettingsPanel(): React.Component | void;
+    getSettingsPanel(): JSX.Element | void;
   }
 }
 
@@ -1302,7 +1302,7 @@ declare module '@utilities/getNestedProp' {
 }
 
 declare module '@utilities/getNestedType' {
-  export default function getNestedType(component: React.Component): any;
+  export default function getNestedType(component: JSX.Element): any;
 }
 
 declare module '@utilities/getOwnerInstance' {
@@ -1416,4 +1416,3 @@ declare module '@utilities/waitFor' {
 
   export default function (selector: string): Promise<HTMLElement>;
 }
-

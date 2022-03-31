@@ -1,12 +1,14 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@types/highlightjs': ^9.12.2
   '@types/node': ^17.0.21
   '@types/react': ^17.0.40
   '@types/react-dom': ^17.0.13
   discord-types: ^0.1.1
 
 dependencies:
+  '@types/highlightjs': 9.12.2
   '@types/node': 17.0.21
   '@types/react': 17.0.40
   '@types/react-dom': 17.0.13
@@ -23,6 +25,10 @@ packages:
     dependencies:
       '@types/fbemitter': 2.0.32
       '@types/react': 17.0.40
+    dev: false
+
+  /@types/highlightjs/9.12.2:
+    resolution: {integrity: sha512-oW2pEKwshxwBW1nVUizWQg/tnhboRtKrUKnF2hd6l4BZ0shr5ZjQ4ra/82+NEH6uWeM8JjrMGCux5enQXOQbTA==}
     dev: false
 
   /@types/node/17.0.21:

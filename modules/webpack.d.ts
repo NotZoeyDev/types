@@ -225,10 +225,10 @@ declare module '@webpack/common' {
   export const messages: any;
   export const Dispatcher: any;
   export const contextMenu: any;
-  export const HighlightJS: any;
   export const constants: constants;
   export function zustand(): Function;
   export const channels: SelectedStore;
+  export const HighlightJS: typeof hljs;
   export const React: typeof import('react');
   export const ReactDOM: typeof import('react-dom');
 

@@ -221,24 +221,27 @@ declare module '@webpack/common' {
     constants,
     UserStore,
     GuildStore,
+    UserActions,
     SelectedStore,
+    FluxDispatcher,
+    RelationshipStore,
   } from 'discord-types';
 
   export const Flux: any;
   export const Modal: any;
   export const Locale: any;
   export const Messages: any;
-  export const Dispatcher: any;
-  export const AsyncUsers: any;
   export const ContextMenu: any;
   export const Users: UserStore;
   export const Guilds: GuildStore;
-  export const Relationships: any;
   export const constants: constants;
   export function zustand(): Function;
+  export const AsyncUsers: UserActions;
   export const Channels: SelectedStore;
   export const HighlightJS: typeof hljs;
+  export const Dispatcher: FluxDispatcher;
   export const React: typeof import('react');
+  export const Relationships: RelationshipStore;
   export const ReactDOM: typeof import('react-dom');
 
   export * as default from '@webpack/common';

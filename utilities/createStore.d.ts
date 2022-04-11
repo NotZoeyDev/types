@@ -7,5 +7,5 @@ declare module '@utilities/createStore' {
    * & its data and functions that go along with it.
    */
 
-  export default function (data: object): GenericStore;
+  export default function (data?: object): GenericStore;
 }

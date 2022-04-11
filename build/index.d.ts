@@ -551,19 +551,25 @@ declare module '@modules/logger' {
   }
 }
 
-interface Patch {
+interface PatchInstance {
+  type: string;
+  caller: string;
+  unpatch: () => void;
+  id: number | undefined;
+  callback: (_: any, args: any[], res: any) => any;
+}
+
+interface PatchCollection {
   mdl: any;
   func: string;
   caller: string;
   original: Function;
   unpatch: () => void;
   patches: {
-    type: string;
-    caller: string;
-    unpatch: () => void;
-    id: number | undefined;
-    callback: (_: any, args: any[], res: any) => any;
-  }[];
+    after: PatchInstance[];
+    before: PatchInstance[];
+    instead: PatchInstance[];
+  };
 }
 
 declare module '@patcher' {
@@ -572,7 +578,7 @@ declare module '@patcher' {
    * 
    * You probably won't ever need to touch this.
    */
-  export const patches: Patch[];
+  export const patches: PatchCollection[];
 
   /**
    * Takes away the hasle of assigning caller IDs everytime you want to patch.
@@ -583,7 +589,7 @@ declare module '@patcher' {
     /**
      * Returns an array of patches under the provided caller ID.
      */
-    getPatchesByCaller(id: string): Patch[];
+    getPatchesByCaller(id: string): PatchInstance[];
 
     /**
      * Unpatches all patches for this patcher "create" instance.
@@ -609,7 +615,7 @@ declare module '@patcher' {
   /**
    * Returns an array of patches under the provided caller ID.
    */
-  export function getPatchesByCaller(id: string): Patch[];
+  export function getPatchesByCaller(id: string): PatchInstance[];
 
   /**
    * Unpatches all patches with the provided caller ID.
@@ -1201,7 +1207,7 @@ declare module '@utilities/createStore' {
    * & its data and functions that go along with it.
    */
 
-  export default function (data: object): GenericStore;
+  export default function (data?: object): GenericStore;
 }
 
 declare module '@utilities/debounce' {
